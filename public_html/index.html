@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>ROUTES</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        
+    .center {  width: 50%;  margin: 0 auto; }      
+    h1 {font-size: 2em;}
+    h2 {font-size: 1.2em;}
+body {background-color: #efefef;}    
+        </style>
+        
+   
+    </head>
+    
+    <body>
+        <!--titel & start, end & meter-->
+
+        <section class="center" >
+        <div >
+    <h1>JSON Route-planner</h1> 
+        </div>
+            <div>
+    <h2>Route vanaf
+        <span id="start" style="color:blue"></span>
+        naar
+        <span id="end" style="color:green"></span></h2>
+    <p>Afstand: 
+        <span id="meters">  </span>
+        meter</p>
+
+</div>
+        <!-- / titel & start, end & meter-->
+
+         <!--image-->
+<div>
+    <img id="image" alt="image" src="" style="width:700px; display: none;"/>
+<canvas id="myCanvas" width="700" height="1000">
+</canvas>
+</div>
+         <!-- / image-->
+
+
+<!--check if points will load--> 
+<!--<div>
+    <p id="line1"></p>
+    <p id="line2"></p>
+    <p id="line3"></p>
+    <p id="line4"></p>
+</div>-->
+
+
+            
+    </section>            
+     <script> 
+
+// one example  route (2)
+    var theRoute = '{"start":"Hogeschool van Amsterdam", "end": "Amsterdam Dam", "mapImageURL" : "http://www.vandervaartenomstreken.nl/Genealogie/Steden/foto\'s%20steden/amsterdam%20kaart.jpg", "imageWidth": 1000, "imageHeight" : 843, "scale" : 4.0, "route": [ [851, 579], [837,563], [663,433], [590,438],[589,427], [577,424],[565,417],[432,438], [404,445]]}';
+    var RouteObj = JSON.parse(theRoute);
+
+// start, end, meter & image into html
+    document.getElementById("start").innerHTML = RouteObj.start;
+    document.getElementById("end").innerHTML = RouteObj.end;
+    
+    var distance = 2057;
+    
+    document.getElementById("meters").innerHTML = distance;
+    document.getElementById("image").src = RouteObj.mapImageURL;
+
+// image in canvas
+        var canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
+        var image = document.getElementById("image");
+// draw
+        var ratio = 700 / RouteObj.imageWidth;
+
+    image.onload = function () {
+            ctx.drawImage(image, 0, 0, 700, (ratio * RouteObj.imageHeight));
+            ctx.beginPath();
+            drawRoute();
+            ctx.stroke();
+        };
+
+                                    console.log('ratio = ' + ratio);
+                                    console.log('ratio * height = ' + ratio * RouteObj.imageHeight);
+
+
+// loop to get 
+        function drawRoute() {
+            for (var i = 0; i < RouteObj.route.length; i++) {
+                xas = RouteObj.route[i][0];
+                yas = RouteObj.route[i][1];
+                ctx.strokeStyle="blue";
+                ctx.lineTo((xas/700), (yas * ratio));
+
+            };
+
+        };
+    
+    
+
+
+    </script>
+    
+    
+    
+       </body>
+ 
+</html>
+
