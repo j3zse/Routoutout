@@ -7,7 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
 
-            .center {  width: 50%;  margin: 0 auto; }      
+            .center {width: 50%; margin: 0 auto;}      
             h1 {font-size: 2em;}
             h2 {font-size: 1.2em;}
             body {background-color: #efefef;}    
@@ -43,38 +43,25 @@
             </div>
             <!-- / image-->
 
-
-            <!--check if points will load--> 
-            <!--<div>
-                <p id="line1"></p>
-                <p id="line2"></p>
-                <p id="line3"></p>
-                <p id="line4"></p>
-            </div>-->
-
-
-
         </section>            
         <script>
 
-   // one example  route (2)
+            // one example  route (2)
             var theRoute1 = '{"start":"Hogeschool van Amsterdam", "end": "Amsterdam Dam", "mapImageURL" : "http://www.vandervaartenomstreken.nl/Genealogie/Steden/foto\'s%20steden/amsterdam%20kaart.jpg", "imageWidth": 1000, "imageHeight" : 843, "scale" : 4.0, "route": [ [851, 579], [837,563], [663,433], [590,438],[589,427], [577,424],[565,417],[432,438], [404,445]]}';
             var theRoute2 = '{"start": "Amsterdam Dam", "end": "Hogeschool van Amsterdam", "mapImageURL" :"http://ftp.ruimtelijkeplannen.amsterdam.nl/SDCentrum/NL.IMRO.0363.A1103BPSTD-VG01/i_NL.IMRO.0363.A1103BPSTD-VG01_0003.jpg", "imageWidth": 2144, "imageHeight" : 1640, "scale" : 1.9, "route" : [ [1300,790], [1221,825], [1220,817], [1153,817], [1102,823], [1031,840], [975,852], [942,806], [919,807], [917,772], [764,777], [761,768], [433,515], [400,480] ]}';
             var RouteObj = JSON.parse(theRoute2);
 
-   // start, end, meter & image into html
+            // start, end, meter & image into html
             document.getElementById("start").innerHTML = RouteObj.start;
             document.getElementById("end").innerHTML = RouteObj.end;
-
-            var distance = 2057;
-
             document.getElementById("image").src = RouteObj.mapImageURL;
 
-   // image in canvas
+            // image in canvas
             var canvas = document.getElementById("myCanvas");
             var ctx = canvas.getContext("2d");
             var image = document.getElementById("image");
-   // draw
+            
+            // draw route
             var ratio = 700 / RouteObj.imageWidth;
 
             image.onload = function () {
@@ -88,37 +75,33 @@
             console.log('ratio * height = ' + ratio * RouteObj.imageHeight);
 
 
-   // loop to get 
             function drawRoute() {
                 var sumx = 0;
                 var sumy = 0;
 
-
+            // loop to get points to draw
                 for (var i = 0; i < RouteObj.route.length; i++) {
+
+
                     xas = RouteObj.route[i][0];
                     yas = RouteObj.route[i][1];
                     ctx.strokeStyle = "blue";
                     ctx.lineTo((xas * ratio), (yas * ratio));
-                    
-// als je de regels 106 t/m 110 hieronder AANZET doet de blauwe lijn t NIET, maar doet METERS t WEL
-// als je de regels 106 t/m 110 hieronder UITZET doet de blauwe lijn t WEL, maar doet METERS t NIET
-    // count values in meters                     
-                        sumx = sumx += Math.abs((RouteObj.route[i + 1][0] - RouteObj.route[i][0]));
-                        sumy = sumy += Math.abs((RouteObj.route[i + 1][1] - RouteObj.route[i][1]));
-                        console.log('count x = ' + sumx);
-                        console.log('count y = ' + sumy);
-                        document.getElementById("meters").innerHTML = Math.round(RouteObj.scale * (sumx + sumy));
-
+                };
                 
-                
-                }
-                ;
+            //  calculate distance
+                for (var i = 0; i < (RouteObj.route.length - 1); i++) {
 
-            }
-            ;
+                    sumx = sumx += Math.abs((RouteObj.route[i + 1][0] - RouteObj.route[i][0]));
+                    sumy = sumy += Math.abs((RouteObj.route[i + 1][1] - RouteObj.route[i][1]));
+                    console.log('count x = ' + sumx);
+                    console.log('count y = ' + sumy);
+                    document.getElementById("meters").innerHTML = Math.round(RouteObj.scale * (sumx + sumy));
+
+                };
+            };
 
 
-   //    var distance = distancex + distancey
 
 
         </script>
