@@ -17,8 +17,8 @@
     </head>
 
     <body>
-        <!--titel & start, end & meter-->
 
+        <!--titel & start, end & meter-->
         <section class="center" >
             <div >
                 <h1>JSON Route-planner</h1> 
@@ -29,11 +29,11 @@
                     naar
                     <span id="end" style="color:green"></span></h2>
                 <p>Afstand: 
-                    <span id="meters">  </span>
+                    <span id="distance">  </span>
                     meter</p>
 
             </div>
-            <!-- / titel & start, end & meter-->
+            <!-- / titel & start, end & distance-->
 
             <!--image-->
             <div>
@@ -96,7 +96,7 @@
                     sumy = sumy += Math.abs((RouteObj.route[i + 1][1] - RouteObj.route[i][1]));
                     console.log('count x = ' + sumx);
                     console.log('count y = ' + sumy);
-                    document.getElementById("meters").innerHTML = Math.round(RouteObj.scale * (sumx + sumy));
+                    document.getElementById("distance").innerHTML = Math.round(RouteObj.scale * (sumx + sumy));
 
                 };
             };
