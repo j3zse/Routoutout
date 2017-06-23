@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>ROUTES</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="shortcut icon" href="./img/ams.ico">
+
+        <style>
+
+            .center {width: 50%; margin: 0 auto;}      
+            h1 {font-size: 2em; margin-top:60px;}
+            h2 {font-size: 1.2em;}
+            body {background-color: #efefef;}    
+        </style>
+
+
+    </head>
+
+    <body>
+        <!-- button route-->
+            <div> <p> Selecteer een route <select id="button" onchange="LoadRoutes"> </select></p></div>
+        <!--/ button route-->
+
+        <!--titel & start, end & meter-->
+        <section class="center" >
+            <div>
+                <h1>JSON Route-planner</h1> 
+            </div>
+            <div>
+                <h2>Route vanaf
+                    <span id="start" style="color:blue"></span>
+                    naar
+                    <span id="end" style="color:green"></span></h2>
+                <p>Afstand: 
+                    <span id="distance">  </span>
+                    meter</p>
+
+            </div>
+            <!-- / titel & start, end & distance-->
+
+            <!--image-->
+            <div>
+                <img id="image" alt="image" src="" style="width:700px; display: none;"/>
+                <canvas id="myCanvas" width="700" height="1000">
+                </canvas>
+            </div>
+            <!-- / image-->
+
+        </section>            
+        <script>
+
+            // before AJAX, routes:
+//            var theRoute1 = '{"start":"Hogeschool van Amsterdam", "end": "Amsterdam Dam", "mapImageURL" : "http://www.vandervaartenomstreken.nl/Genealogie/Steden/foto\'s%20steden/amsterdam%20kaart.jpg", "imageWidth": 1000, "imageHeight" : 843, "scale" : 4.0, "route": [ [851, 579], [837,563], [663,433], [590,438],[589,427], [577,424],[565,417],[432,438], [404,445]]}';
+//            var theRoute2 = '{"start": "Amsterdam Dam", "end": "Hogeschool van Amsterdam", "mapImageURL" :"http://ftp.ruimtelijkeplannen.amsterdam.nl/SDCentrum/NL.IMRO.0363.A1103BPSTD-VG01/i_NL.IMRO.0363.A1103BPSTD-VG01_0003.jpg", "imageWidth": 2144, "imageHeight" : 1640, "scale" : 1.9, "route" : [ [1300,790], [1221,825], [1220,817], [1153,817], [1102,823], [1031,840], [975,852], [942,806], [919,807], [917,772], [764,777], [761,768], [433,515], [400,480] ]}';
+//            var RouteObj = JSON.parse(theRoute1);
+
+
+
+            var xhttp;
+            var RouteObj;
+            
+            if (window.XMLHttpRequest) {
+                xhttp = new XMLHttpRequest();
+            } else {
+                xhttp = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+//            var route = xxx;
+            var parameters = location.search.substring(1)
+//            var start = 'dam';
+//            var end = 'hva';
+            
+            xhttp.onreadystatechange = function () {
+                if (this.readyState === 4 && this.status === 200) {
+                    
+                    RouteObj = JSON.parse(this.responseText);
+
+                    document.getElementById("start").innerHTML = RouteObj.start;
+                    document.getElementById("end").innerHTML = RouteObj.end;
+                    document.getElementById("image").src = RouteObj.mapImageURL;
+
+                    // draw route
+                    var ratio = 700 / RouteObj.imageWidth;
+                    var canvas = document.getElementById("myCanvas");
+                    var context = canvas.getContext("2d");
+
+                    // start & endpoints
+                    var startx;
+                    var starty;
+                    var endx;
+                    var endy;
+
+                    image.onload = function () {
+                        context.drawImage(image, 0, 0, 700, (ratio * RouteObj.imageHeight));
+
+//                draw route
+                        context.beginPath();
+                        drawRoute();
+                        context.stroke();
+
+//                draw beginflag
+                        context.beginPath();
+                        drawBeginFlag();
+                        context.stroke();
+                        context.fill();
+                        context.closePath();
+
+//                draw endflag
+                        context.beginPath();
+                        drawEndFlag();
+                        context.stroke();
+                        context.fill();
+                        context.closePath();
+                    };
+
+//               console.log('ratio = ' + ratio);
+//               console.log('ratio * height = ' + ratio * RouteObj.imageHeight);
+
+                    function drawRoute() {
+                        var sumx = 0;
+                        var sumy = 0;
+
+//              loop to get points to draw
+                        for (var i = 0; i < RouteObj.route.length; i++) {
+
+                            var xas = RouteObj.route[i][0];
+                            var yas = RouteObj.route[i][1];
+
+                            context.strokeStyle = "purple";
+                            context.lineWidth = 2;
+
+                            context.lineTo((xas * ratio), (yas * ratio));
+                        };
+
+//              calculate distance (absolute numbers)
+                        for (var i = 0; i < (RouteObj.route.length - 1); i++) {
+                            sumx = sumx += Math.abs((RouteObj.route[i + 1][0] - RouteObj.route[i][0]));
+                            sumy = sumy += Math.abs((RouteObj.route[i + 1][1] - RouteObj.route[i][1]));
+//              console.log('count x = ' + sumx);
+//              console.log('count y = ' + sumy);
+                            document.getElementById("distance").innerHTML = Math.round(RouteObj.scale * (sumx + sumy));
+
+                        };
+                    };
+//                var startpoint = [endx, endy];   
+//                var endpoint = [endx, endy];
+//                console.log('startpoint  = ' + startpoint);
+//                console.log('endpoint  = ' + endpoint);
+
+                    function drawBeginFlag() {
+                        for (var i = 0; i < RouteObj.route.length; i++) {
+                            startx = RouteObj.route[0][0];
+                            starty = RouteObj.route[0][1];
+                        };
+
+                        context.strokeStyle = "red";
+                        context.lineWidth = 4;
+                        context.fillStyle = "blue";
+                        startx = (startx * ratio);
+                        starty = (starty * ratio);
+
+                        context.moveTo(startx, starty);
+                        context.lineTo(startx, (starty - 25));
+                        context.lineTo((startx + 25), (starty - 35));
+                        context.lineTo(startx, (starty - 45));
+                        context.lineTo(startx, (starty - 25));
+                    };
+
+                    function drawEndFlag() {
+                        for (var i = 0; i < RouteObj.route.length; i++) {
+                            endx = RouteObj.route[RouteObj.route.length - 1][0];
+                            endy = RouteObj.route[RouteObj.route.length - 1][1];
+                        };
+
+                        context.strokeStyle = "red";
+                        context.lineWidth = 4;
+                        context.fillStyle = "green";
+                        endx = (endx * ratio);
+                        endy = (endy * ratio);
+                        context.moveTo(endx, endy);
+                        context.lineTo(endx, (endy - 25));
+                        context.lineTo((endx + 25), (endy - 35));
+                        context.lineTo(endx, (endy - 45));
+                        context.lineTo(endx, (endy - 25));
+
+                    };
+                };
+            };
+
+            xhttp.open('GET', start + '-' + end + '.json', true);
+            xhttp.send();
+            
+
+
+
+
+
+
+
+
+
+        </script>
+
+
+
+    </body>
+
+</html>
+

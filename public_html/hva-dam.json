@@ -1,0 +1,12 @@
+{
+"start": "Hogeschool van Amsterdam",
+ "end": "Amsterdam Dam",
+ "mapImageURL" : "http://www.vandervaartenomstreken.nl/Genealogie/Steden/foto's%20steden/amsterdam%20kaart.jpg" ,
+ "imageWidth": 1000,
+ "imageHeight" : 843,
+ "scale" : 4.0,
+ "route" : [ [851,579], [837,563], [663,433], [590,438],
+ [589,427], [577,424], [565,417],
+ [432,438], [404,445]
+ ]
+}

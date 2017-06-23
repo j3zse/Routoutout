@@ -1,0 +1,14 @@
+{
+ "start": "Amsterdam Dam",
+ "end": "Hogeschool van Amsterdam",
+ "mapImageURL" : "http://ftp.ruimtelijkeplannen.amsterdam.nl/SDCentrum/NL.IMRO.0363.A1103BPSTD-VG01/i_NL.IMRO.0363.A1103BPSTD-VG01_0003.jpg",
+ "imageWidth": 2144,
+ "imageHeight" : 1640,
+ "scale" : 1.9,
+ "route" : [ [1300,790], [1221,825], [1220,817],
+ [1153,817], [1102,823], [1031,840],
+ [975,852], [942,806], [919,807],
+ [917,772], [764,777], [761,768],
+ [433,515], [400,480]
+ ]
+}
